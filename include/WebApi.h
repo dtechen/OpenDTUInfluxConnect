@@ -9,6 +9,7 @@
 #include "WebApi_firmware.h"
 #include "WebApi_gridprofile.h"
 #include "WebApi_inverter.h"
+#include "WebApi_influx.h"
 #include "WebApi_limit.h"
 #include "WebApi_maintenance.h"
 #include "WebApi_mqtt.h"
@@ -45,6 +46,7 @@ private:
     WebApiEventlogClass _webApiEventlog;
     WebApiFirmwareClass _webApiFirmware;
     WebApiGridProfileClass _webApiGridprofile;
+    WebApiInfluxClass _webApiInflux;
     WebApiInverterClass _webApiInverter;
     WebApiLimitClass _webApiLimit;
     WebApiMaintenanceClass _webApiMaintenance;

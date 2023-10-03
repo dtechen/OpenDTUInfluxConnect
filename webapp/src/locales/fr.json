@@ -20,7 +20,9 @@
         "Console": "Console",
         "About": "A propos",
         "Logout": "Déconnexion",
-        "Login": "Connexion"
+        "Login": "Connexion",
+        "InfluxSettings": "Influx",
+        "Influx": "Influx"
     },
     "base": {
         "Loading": "Chargement...",

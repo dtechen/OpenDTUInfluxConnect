@@ -38,6 +38,9 @@
                                 <router-link @click="onClick" class="dropdown-item" to="/settings/mqtt">{{ $t('menu.MQTTSettings') }}</router-link>
                             </li>
                             <li>
+                                <router-link @click="onClick" class="dropdown-item" to="/settings/influx">{{ $t('menu.InfluxSettings') }}</router-link>
+                            </li>
+                            <li>
                                 <router-link @click="onClick" class="dropdown-item" to="/settings/inverter">{{ $t('menu.InverterSettings') }}
                                 </router-link>
                             </li>
@@ -82,6 +85,9 @@
                             </li>
                             <li>
                                 <router-link @click="onClick" class="dropdown-item" to="/info/mqtt">{{ $t('menu.MQTT') }}</router-link>
+                            </li>
+                            <li>
+                                <router-link @click="onClick" class="dropdown-item" to="/info/influx">{{ $t('menu.Influx') }}</router-link>
                             </li>
                             <li>
                                 <hr class="dropdown-divider" />

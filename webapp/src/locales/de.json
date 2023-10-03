@@ -20,7 +20,9 @@
         "Console": "Konsole",
         "About": "Über",
         "Logout": "Abmelden",
-        "Login": "Anmelden"
+        "Login": "Anmelden",
+        "InfluxSettings": "Influx",
+        "Influx": "Influx"
     },
     "base": {
         "Loading": "Lade...",
@@ -579,5 +581,36 @@
         "Name": "Name",
         "ValueSelected": "Ausgewählt",
         "ValueActive": "Aktiv"
+    },
+    "influxadmin": {
+        "InfluxSettings": "Influx-Einstellungen",
+        "InfluxConfiguration": "Influx-Konfiguration",
+        "EnableInflux": "Influx aktivieren",
+        "InfluxCloudParameter": "Parameter - Influx Cloud",
+        "Hostname": "Hostname:",
+        "HostnameHint": "Hostname oder IP-Adresse",
+        "Port": "Port:",
+        "Org": "Organisation:",
+        "OrgHint": "Org, zu finden unter InfluxDB UI -> Einstellungen -> Profile -> (Name unter dem Feld)",
+        "Token": "Token:",
+        "TokenHint": "Token, zu finden unter InfluxDB UI -> Load Data -> Tokens",
+        "Bucket": "Bucket:",
+        "BucketHint": "Zu verwendender Influx Bucket",
+        "PublishInterval": "Veröffentlichungsintervall:",
+        "Seconds": "Sekunden",
+        "Save": "@:dtuadmin.Save"
+    },
+    "influxinfo": {
+        "InfluxInformation": "Influx-Informationen",
+        "ConfigurationSummary": "@:ntpinfo.ConfigurationSummary",
+        "Status": "@:ntpinfo.Status",
+        "Enabled": "aktiv",
+        "Disabled": "nicht aktiv",
+        "Server": "@:ntpinfo.Server",
+        "Port": "Port",
+        "Org": "Organisation",
+        "Bucket": "Influx Bucket",
+        "PublishInterval": "Veröffentlichungsintervall",
+        "Seconds": "{sec} Sekunden"
     }
 }

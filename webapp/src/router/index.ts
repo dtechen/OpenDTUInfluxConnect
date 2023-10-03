@@ -6,6 +6,8 @@ import DtuAdminView from '@/views/DtuAdminView.vue';
 import FirmwareUpgradeView from '@/views/FirmwareUpgradeView.vue';
 import HomeView from '@/views/HomeView.vue';
 import InverterAdminView from '@/views/InverterAdminView.vue';
+import InfluxAdminView from '@/views/InfluxAdminView.vue';
+import InfluxInfoView from '@/views/InfluxInfoView.vue';
 import LoginView from '@/views/LoginView.vue';
 import MaintenanceRebootView from '@/views/MaintenanceRebootView.vue';
 import MqttAdminView from '@/views/MqttAdminView.vue';
@@ -111,6 +113,16 @@ const router = createRouter({
         path: '/maintenance/reboot',
         name: 'Device Reboot',
         component: MaintenanceRebootView
+    },
+    {
+        path: '/settings/influx',
+        name: 'Influx Settings',
+        component: InfluxAdminView
+    },
+    {
+        path: '/info/influx',
+        name: 'Influx',
+        component: InfluxInfoView
     }
 ]
 });
