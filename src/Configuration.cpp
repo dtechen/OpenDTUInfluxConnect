@@ -273,6 +273,15 @@ bool ConfigurationClass::read()
         }
     }
 
+    JsonObject influx = doc["influx"];
+    config.Influx_Enabled = influx["enabled"] | INFLUX_ENABLED;
+    strlcpy(config.Influx_Hostname, influx["hostname"] | INFLUX_HOST, sizeof(config.Influx_Hostname));
+    config.Influx_Port = influx["port"] | INFLUX_PORT;
+    strlcpy(config.Influx_Org, influx["org"] | INFLUX_ORG, sizeof(config.Influx_Org));
+    strlcpy(config.Influx_Token, influx["token"] | INFLUX_TOKEN, sizeof(config.Influx_Token));
+    strlcpy(config.Influx_Bucket, influx["bucket"] | INFLUX_BUCKET, sizeof(config.Influx_Bucket));
+    config.Influx_PublishInterval = influx["publish_interval"] | INFLUX_PUBLISH_INTERVAL;
+
     f.close();
     return true;
 }

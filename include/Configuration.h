@@ -31,6 +31,11 @@
 
 #define JSON_BUFFER_SIZE 12288
 
+#define INFLUX_MAX_HOSTNAME_STRLEN 128
+#define INFLUX_MAX_ORG_STRLEN 64
+#define INFLUX_MAX_TOKEN_STRLEN 64
+#define INFLUX_MAX_BUCKET_STRLEN 32
+
 struct CHANNEL_CONFIG_T {
     uint16_t MaxChannelPower;
     char Name[CHAN_MAX_NAME_STRLEN];
@@ -116,6 +121,14 @@ struct CONFIG_T {
     uint8_t Display_Rotation;
     uint8_t Display_Contrast;
     uint8_t Display_Language;
+
+    bool Influx_Enabled;
+    char Influx_Hostname[INFLUX_MAX_HOSTNAME_STRLEN + 1];
+    uint32_t Influx_Port;
+    char Influx_Org[INFLUX_MAX_ORG_STRLEN + 1];
+    char Influx_Token[INFLUX_MAX_TOKEN_STRLEN + 1];
+    char Influx_Bucket[INFLUX_MAX_BUCKET_STRLEN + 1];
+    uint32_t Influx_PublishInterval;
 };
 
 class ConfigurationClass {

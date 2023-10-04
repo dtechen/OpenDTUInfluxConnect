@@ -97,3 +97,11 @@
 #define DISPLAY_LANGUAGE 0U
 
 #define REACHABLE_THRESHOLD 2U
+
+#define INFLUX_ENABLED false
+#define INFLUX_HOST ""
+#define INFLUX_PORT 1883U
+#define INFLUX_ORG ""
+#define INFLUX_TOKEN ""
+#define INFLUX_BUCKET ""
+#define INFLUX_PUBLISH_INTERVAL 60U

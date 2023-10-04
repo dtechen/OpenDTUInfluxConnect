@@ -585,8 +585,8 @@
     "influxadmin": {
         "InfluxSettings": "Influx-Einstellungen",
         "InfluxConfiguration": "Influx-Konfiguration",
-        "EnableInflux": "Influx aktivieren",
-        "InfluxCloudParameter": "Parameter - Influx Cloud",
+        "EnableInflux": "Influx Cloud aktivieren",
+        "InfluxCloudParameter": "Influx Cloud",
         "Hostname": "Hostname:",
         "HostnameHint": "Hostname oder IP-Adresse",
         "Port": "Port:",

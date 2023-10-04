@@ -87,4 +87,12 @@ enum WebApiError {
 
     HardwareBase = 12000,
     HardwarePinMappingLength,
+
+    InfluxBase = 13000,
+    InfluxHostnameLength,
+    InfluxOrgLength,
+    InfluxTokenLength,
+    InfluxBucketLength,
+    InfluxPort,
+    InfluxPublishInterval,
 };
