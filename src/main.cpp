@@ -5,6 +5,8 @@
 #include "Configuration.h"
 #include "Datastore.h"
 #include "Display_Graphic.h"
+#include "InfluxHandle.h"
+#include "InfluxSettings.h"
 #include "InverterSettings.h"
 #include "Led_Single.h"
 #include "MessageOutput.h"
@@ -142,6 +144,12 @@ void setup()
     }
     MessageOutput.println("done");
 
+    // Initialize Influx
+    MessageOutput.print("Initialize Influx... ");
+    InfluxSettings.init();
+    InfluxHandle.init();
+    MessageOutput.println("done");
+
     InverterSettings.init();
 
     Datastore.init();
@@ -173,4 +181,5 @@ void loop()
     yield();
     LedSingle.loop();
     yield();
+    InfluxHandle.loop();
 }

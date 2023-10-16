@@ -100,7 +100,6 @@
 
 #define INFLUX_ENABLED false
 #define INFLUX_HOST ""
-#define INFLUX_PORT 1883U
 #define INFLUX_ORG ""
 #define INFLUX_TOKEN ""
 #define INFLUX_BUCKET ""

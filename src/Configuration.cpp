@@ -123,6 +123,14 @@ bool ConfigurationClass::write()
         }
     }
 
+    JsonObject influx = doc.createNestedObject("influx");
+    influx["enabled"] = config.Influx_Enabled;
+    influx["hostname"] = config.Influx_Hostname;
+    influx["org"] = config.Influx_Org;
+    influx["token"] = config.Influx_Token;
+    influx["bucket"] = config.Influx_Bucket;
+    influx["publish_interval"] = config.Influx_PublishInterval;
+
     // Serialize JSON to file
     if (serializeJson(doc, f) == 0) {
         MessageOutput.println("Failed to write file");
@@ -276,7 +284,6 @@ bool ConfigurationClass::read()
     JsonObject influx = doc["influx"];
     config.Influx_Enabled = influx["enabled"] | INFLUX_ENABLED;
     strlcpy(config.Influx_Hostname, influx["hostname"] | INFLUX_HOST, sizeof(config.Influx_Hostname));
-    config.Influx_Port = influx["port"] | INFLUX_PORT;
     strlcpy(config.Influx_Org, influx["org"] | INFLUX_ORG, sizeof(config.Influx_Org));
     strlcpy(config.Influx_Token, influx["token"] | INFLUX_TOKEN, sizeof(config.Influx_Token));
     strlcpy(config.Influx_Bucket, influx["bucket"] | INFLUX_BUCKET, sizeof(config.Influx_Bucket));

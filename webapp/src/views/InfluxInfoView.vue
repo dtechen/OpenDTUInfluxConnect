@@ -15,10 +15,6 @@
                             <td>{{ influxDataList.influx_hostname }}</td>
                         </tr>
                         <tr>
-                            <th>{{ $t('influxinfo.Port') }}</th>
-                            <td>{{ influxDataList.influx_port }}</td>
-                        </tr>
-                        <tr>
                             <th>{{ $t('influxinfo.Org') }}</th>
                             <td>{{ influxDataList.influx_org }}</td>
                         </tr>

@@ -4,6 +4,7 @@
  */
 #include "WebApi_influx.h"
 #include "Configuration.h"
+#include "InfluxSettings.h"
 #include "WebApi.h"
 #include "WebApi_errors.h"
 #include "helper.h"
@@ -36,7 +37,6 @@ void WebApiInfluxClass::onInfluxStatus(AsyncWebServerRequest* request)
 
     root["influx_enabled"] = config.Influx_Enabled;
     root["influx_hostname"] = config.Influx_Hostname;
-    root["influx_port"] = config.Influx_Port;
     root["influx_org"] = config.Influx_Org;
     root["influx_bucket"] = config.Influx_Bucket;
     root["influx_publish_interval"] = config.Influx_PublishInterval;
@@ -57,7 +57,6 @@ void WebApiInfluxClass::onInfluxAdminGet(AsyncWebServerRequest* request)
 
     root["influx_enabled"] = config.Influx_Enabled;
     root["influx_hostname"] = config.Influx_Hostname;
-    root["influx_port"] = config.Influx_Port;
     root["influx_token"] = config.Influx_Token;
     root["influx_org"] = config.Influx_Org;
     root["influx_bucket"] = config.Influx_Bucket;
@@ -108,7 +107,6 @@ void WebApiInfluxClass::onInfluxAdminPost(AsyncWebServerRequest* request)
 
     if (!(root.containsKey("influx_enabled")
             && root.containsKey("influx_hostname")
-            && root.containsKey("influx_port")
             && root.containsKey("influx_org")
             && root.containsKey("influx_token")
             && root.containsKey("influx_bucket")
@@ -155,14 +153,6 @@ void WebApiInfluxClass::onInfluxAdminPost(AsyncWebServerRequest* request)
             return;
         }
 
-        if (root["influx_port"].as<uint>() == 0 || root["influx_port"].as<uint>() > 65535) {
-            retMsg["message"] = "Port must be a number between 1 and 65535!";
-            retMsg["code"] = WebApiError::InfluxPort;
-            response->setLength();
-            request->send(response);
-            return;
-        }
-
         if (root["influx_publish_interval"].as<uint32_t>() < 5 || root["influx_publish_interval"].as<uint32_t>() > 65535) {
             retMsg["message"] = "Publish interval must be a number between 5 and 65535!";
             retMsg["code"] = WebApiError::InfluxPublishInterval;
@@ -176,7 +166,6 @@ void WebApiInfluxClass::onInfluxAdminPost(AsyncWebServerRequest* request)
 
     CONFIG_T& config = Configuration.get();
     config.Influx_Enabled = root["influx_enabled"].as<bool>();
-    config.Influx_Port = root["influx_port"].as<uint>();
     strlcpy(config.Influx_Hostname, root["influx_hostname"].as<String>().c_str(), sizeof(config.Influx_Hostname));
     strlcpy(config.Influx_Org, root["influx_org"].as<String>().c_str(), sizeof(config.Influx_Org));
     strlcpy(config.Influx_Token, root["influx_token"].as<String>().c_str(), sizeof(config.Influx_Token));
@@ -187,6 +176,8 @@ void WebApiInfluxClass::onInfluxAdminPost(AsyncWebServerRequest* request)
     retMsg["type"] = "success";
     retMsg["message"] = "Settings saved!";
     retMsg["code"] = WebApiError::GenericSuccess;
+
+    InfluxSettings.init();
 
     response->setLength();
     request->send(response);

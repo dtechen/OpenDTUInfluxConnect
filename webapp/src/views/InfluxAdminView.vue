@@ -19,10 +19,6 @@
                               type="text" maxlength="128"
                               :placeholder="$t('influxadmin.HostnameHint')"/>
 
-                <InputElement :label="$t('influxadmin.Port')"
-                              v-model="influxConfigList.influx_port"
-                              type="number" min="1" max="65535"/>
-
                 <InputElement :label="$t('influxadmin.Org')"
                               v-model="influxConfigList.influx_org"
                               type="text" maxlength="64"
@@ -30,7 +26,7 @@
 
                 <InputElement :label="$t('influxadmin.Token')"
                               v-model="influxConfigList.influx_token"
-                              type="password" maxlength="64"
+                              type="password" maxlength="128"
                               :placeholder="$t('influxadmin.TokenHint')"/>
 
                 <InputElement :label="$t('influxadmin.Bucket')"
