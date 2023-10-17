@@ -31,10 +31,7 @@ void InfluxHandleClass::loop()
         if (totalInverterData()) {
             InfluxSettings.publish(totalInverter);
         }
-
-        if (inverterData()) {
-            InfluxSettings.publish(inverter);
-        }
+        handleInverters();
         
         _lastPublish = millis();
     }
@@ -42,37 +39,51 @@ void InfluxHandleClass::loop()
 
 bool InfluxHandleClass::totalInverterData()
 {
-    totalInverter.clearFields();
-    totalInverter.addField("ac-power", String(Datastore.getTotalAcPowerEnabled(), Datastore.getTotalAcPowerDigits()));
-    totalInverter.addField("ac-yieldday", String(Datastore.getTotalAcYieldDayEnabled(), Datastore.getTotalAcYieldDayDigits()));
-    totalInverter.addField("dc-power", String(Datastore.getTotalDcPowerEnabled(), Datastore.getTotalDcPowerDigits()));
-    totalInverter.addField("dc-irradiation", String(Datastore.getTotalDcIrradiation(), 3));
+    totalInverter.addField("ac-power", Datastore.getTotalAcPowerEnabled());
+    totalInverter.addField("ac-yieldday", Datastore.getTotalAcYieldDayEnabled());
+    totalInverter.addField("ac-yieldtotal", Datastore.getTotalAcYieldTotalEnabled());
+    totalInverter.addField("dc-power", Datastore.getTotalDcPowerEnabled());
+    totalInverter.addField("dc-irradiation", Datastore.getTotalDcIrradiation());
 
-    return Datastore.getIsAllEnabledReachable();
+    return Datastore.getIsAtLeastOneReachable();
 }
 
-bool InfluxHandleClass::inverterData()
+void InfluxHandleClass::handleInverters()
 {
     for (uint8_t i = 0; i < Hoymiles.getNumInverters(); i++) {
         auto inv = Hoymiles.getInverterByPos(i);
         inverter.clearFields();
-        inverter.clearTags();
-        inverter.addTag("name", inv->name());
         inverter.addField("isReachable", inv->isReachable());
         inverter.addField("isProducing", inv->isProducing());
 
         if (inv->Statistics()->getLastUpdate() > 0) {
-            // Loop all channels
-            for (auto& t : inv->Statistics()->getChannelTypes()) {
-                for (auto& c : inv->Statistics()->getChannelsByType(t)) {
-                    // todo
-                    ;
+            // Loop all channels by type
+            for (auto& type : inv->Statistics()->getChannelTypes()) {
+                for (auto& channel : inv->Statistics()->getChannelsByType(type)) {
+                    String name = inv->name();
+                    StatisticsParser* parser = inv->Statistics();
+                    handleInverterChannel(name, parser, type, channel);
                 }
             }
         }
 
         yield();
     }
+}
 
-    return false;     
+void InfluxHandleClass::handleInverterChannel(String name, StatisticsParser* stats, ChannelType_t type, ChannelNum_t channel) {
+    bool hasData = false;
+    inverter.clearTags();
+    inverter.addTag("name", name);
+    inverter.addTag("type", stats->getChannelTypeName(type));
+    for (uint8_t f = 0; f < sizeof(_publishFields) / sizeof(FieldId_t); f++) {
+        if (stats->hasChannelFieldValue(type, channel, _publishFields[f])) {
+            hasData = true;
+            inverter.addField(stats->getChannelFieldName(type, channel, _publishFields[f]),
+            stats->getChannelFieldValue(type, channel, _publishFields[f]));
+        }
+    }
+    if (hasData) {
+        InfluxSettings.publish(inverter);
+    }
 }

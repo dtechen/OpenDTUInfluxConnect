@@ -34,10 +34,6 @@ void InfluxSettingsClass::performConnect()
         const String influxDbOrg = config.Influx_Org;
         const String influxDbBucket = config.Influx_Bucket;
         const String influxDbToken = config.Influx_Token;
-        MessageOutput.print("Using hostname " + influxDbUrl);
-        MessageOutput.print("Using Org " + influxDbOrg);
-        MessageOutput.print("Using bucket " + influxDbBucket);
-        MessageOutput.println("Using token " + influxDbToken);
         influxClient = new InfluxDBClient(influxDbUrl, influxDbOrg, influxDbBucket, influxDbToken, InfluxDbCloud2CACert);
 
         checkConnection();
@@ -86,7 +82,7 @@ void InfluxSettingsClass::init()
 {
     if (NetworkSettings.isConnected() && Configuration.get().Influx_Enabled) {
         performConnect();
-    } else {
+    } else if (!Configuration.get().Influx_Enabled) {
         performDisconnect();
     }
 }
