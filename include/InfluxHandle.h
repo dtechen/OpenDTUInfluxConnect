@@ -2,6 +2,7 @@
 #pragma once
 
 #include <Hoymiles.h>
+#include "InfluxSettings.h"
 #include <cstdint>
 
 class InfluxHandleClass {
@@ -27,9 +28,9 @@ private:
         FLD_IRR,
         FLD_Q
     };
-    bool totalInverterData();
+    bool totalInverterData(Point totalInverter);
     void handleInverters();
-    void handleInverterChannel(String name, StatisticsParser* stats, ChannelType_t type, ChannelNum_t channel);
+    void handleInverterChannel(Point inverter, String name, StatisticsParser* stats, ChannelType_t type, ChannelNum_t channel);
 };
 
 extern InfluxHandleClass InfluxHandle;

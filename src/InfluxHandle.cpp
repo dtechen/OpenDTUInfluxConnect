@@ -7,16 +7,13 @@
 #include "Datastore.h"
 #include "InfluxSettings.h"
 #include "NetworkSettings.h"
+#include "MessageOutput.h"
 #include <Hoymiles.h>
 
 InfluxHandleClass InfluxHandle;
 
-Point totalInverter("total");
-Point inverter("inverter");
-
 void InfluxHandleClass::init()
 {
-    totalInverter.addTag("inverter", "total");
 }
 
 void InfluxHandleClass::loop()
@@ -25,31 +22,40 @@ void InfluxHandleClass::loop()
         return;
     }
 
-    const CONFIG_T& config = Configuration.get();
+    //const CONFIG_T& config = Configuration.get();
 
-    if (millis() - _lastPublish > (config.Influx_PublishInterval * 1000)) {
-        if (totalInverterData()) {
+    if (millis() - _lastPublish > (60000 /*config.Influx_PublishInterval * 1000*/)) {
+        Point totalInverter("total");
+        totalInverter.addTag("inverter", "total");
+        if (totalInverterData(totalInverter)) {
+            
             InfluxSettings.publish(totalInverter);
+            // handleInverters();
         }
-        handleInverters();
+        
+        Point memory("mem");
+        memory.addField("emptyHeap", ESP.getFreeHeap());
+        memory.addField("usedHeap", ESP.getHeapSize() - ESP.getFreeHeap());
+        InfluxSettings.publish(memory);
         
         _lastPublish = millis();
     }
 }
 
-bool InfluxHandleClass::totalInverterData()
+bool InfluxHandleClass::totalInverterData(Point totalInverter)
 {
-    totalInverter.addField("ac-power", Datastore.getTotalAcPowerEnabled());
-    totalInverter.addField("ac-yieldday", Datastore.getTotalAcYieldDayEnabled());
-    totalInverter.addField("ac-yieldtotal", Datastore.getTotalAcYieldTotalEnabled());
-    totalInverter.addField("dc-power", Datastore.getTotalDcPowerEnabled());
-    totalInverter.addField("dc-irradiation", Datastore.getTotalDcIrradiation());
+    totalInverter.addField("AcPower", Datastore.getTotalAcPowerEnabled());
+    totalInverter.addField("AcYieldDay", Datastore.getTotalAcYieldDayEnabled());
+    totalInverter.addField("AcYieldTotal", Datastore.getTotalAcYieldTotalEnabled());
+    totalInverter.addField("DcPower", Datastore.getTotalDcPowerEnabled());
+    totalInverter.addField("DcIrradiation", Datastore.getTotalDcIrradiation());
 
     return Datastore.getIsAtLeastOneReachable();
 }
 
 void InfluxHandleClass::handleInverters()
 {
+    Point inverter("inverter");
     for (uint8_t i = 0; i < Hoymiles.getNumInverters(); i++) {
         auto inv = Hoymiles.getInverterByPos(i);
         inverter.clearFields();
@@ -62,7 +68,7 @@ void InfluxHandleClass::handleInverters()
                 for (auto& channel : inv->Statistics()->getChannelsByType(type)) {
                     String name = inv->name();
                     StatisticsParser* parser = inv->Statistics();
-                    handleInverterChannel(name, parser, type, channel);
+                    handleInverterChannel(inverter, name, parser, type, channel);
                 }
             }
         }
@@ -71,7 +77,7 @@ void InfluxHandleClass::handleInverters()
     }
 }
 
-void InfluxHandleClass::handleInverterChannel(String name, StatisticsParser* stats, ChannelType_t type, ChannelNum_t channel) {
+void InfluxHandleClass::handleInverterChannel(Point inverter, String name, StatisticsParser* stats, ChannelType_t type, ChannelNum_t channel) {
     bool hasData = false;
     inverter.clearTags();
     inverter.addTag("name", name);

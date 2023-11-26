@@ -11,7 +11,7 @@ InfluxSettingsClass::InfluxSettingsClass()
 {
 }
 
-void InfluxSettingsClass::performConnect()
+bool InfluxSettingsClass::performConnect()
 {
     if (NetworkSettings.isConnected() && Configuration.get().Influx_Enabled) {
         using std::placeholders::_1;
@@ -36,8 +36,9 @@ void InfluxSettingsClass::performConnect()
         const String influxDbToken = config.Influx_Token;
         influxClient = new InfluxDBClient(influxDbUrl, influxDbOrg, influxDbBucket, influxDbToken, InfluxDbCloud2CACert);
 
-        checkConnection();
+        return checkConnection();
     }
+    return false;
 }
 
 void InfluxSettingsClass::performDisconnect()
@@ -65,17 +66,16 @@ bool InfluxSettingsClass::checkConnection()
 
 void InfluxSettingsClass::publish(Point measurement)
 {
-    std::lock_guard<std::mutex> lock(_clientLock);
-    if (influxClient == nullptr) {
+    if (!performConnect()) {
         return;
     }
 
-    if (checkConnection()) {
-        if (!influxClient->writePoint(measurement)) {
-            MessageOutput.print("Writing to Influx failed: ");
-            MessageOutput.println(influxClient->getLastErrorMessage());
-        }
+    if (!influxClient->writePoint(measurement)) {
+        MessageOutput.print("Writing to Influx failed: ");
+        MessageOutput.println(influxClient->getLastErrorMessage());
     }
+
+    performDisconnect();
 }
 
 void InfluxSettingsClass::init()

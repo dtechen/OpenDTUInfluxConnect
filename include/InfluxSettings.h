@@ -14,7 +14,7 @@ public:
     void publish(Point measurement);
 
 private:
-    void performConnect();
+    bool performConnect();
     void performDisconnect();
     bool checkConnection();
     InfluxDBClient * influxClient = nullptr;
